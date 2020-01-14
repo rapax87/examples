@@ -1,3 +1,14 @@
+<!--
+title: .'DynamoDB Stream To Elasticsearch'
+description: 'Stream data from DynamoDB to Elasticsearch'
+framework: v1
+platform: AWS
+language: Go
+authorLink: 'https://github.com/jalie'
+authorName: 'Jan Liesendahl'
+authorAvatar: 'https://avatars0.githubusercontent.com/u/548657?v=4&s=140'
+-->
+
 # DynamoDB Stream To Elasticsearch 
 ## Deploying cloud information costs $$, Elasticsearch is not part of the free tier, as such please deploy with caution.
 
@@ -40,3 +51,26 @@ You should be able to create a Kibana index by navigating to your Kibana endpoin
 Follow the instructions to create the index, and you should now be able to query your data like so:
 
 ![query](docs/query.png)
+
+
+## Access Policy for Kibana
+The Example itself is running without any further Policy definition, since the Lambda execution role has access to the ES endpoint.
+However, if you want to access Kibana with your Browser - there is an additonal definition needed.
+
+Possible restrictions can be done with aws cognito user auth, aws user auth, IP based or open access (not recommended):
+e.g. with ip restriction:
+```
+        AccessPolicies:
+          Version: "2012-10-17"
+          Statement:
+            -
+              Effect: "Allow"
+              Principal:
+                AWS: "*"
+              Action: "es:*"
+              Resource: "*"
+              Condition:
+                IpAddress:
+                  aws:sourceIp:
+                    - "123.123.123.123"
+```
